@@ -1,0 +1,53 @@
+---
+title: "class10-work"
+author: "isha mukundan"
+format: html
+editor: visual
+---
+
+## Midterm Project
+
+Dataset: USDA-NASS Strawberries
+
+```{r}
+#| label: load libraries
+#| warning: false
+#| message: false
+
+library(knitr)  
+library(kableExtra)
+library(tidyverse)
+library(stringr)
+```
+
+```{r}
+#| label: read data
+
+strawberry <- read_csv("straw1.csv", col_names = TRUE)
+
+glimpse(strawberry)
+```
+
+Check what all types of values are under Program (if only Survey it can be removed).
+
+Check what all types of values are under Geo Level (if only State it can be removed).
+
+Check if Week Ending, Ag District, Ag District Code, County, County ANSI, Zip Code, Region, Watershed, and CV are all NA?
+
+```{r}
+unique(strawberry$Program)
+
+unique(strawberry$`Geo Level`)
+
+unique(strawberry$`Week Ending`)
+unique(strawberry$`Ag District`)
+unique(strawberry$`Ag District Code`)
+```
+
+Write a function to get rid of all of the NA columns etc.
+```{r}
+for(i in 1:dim(strawberry)[2]) {
+  strawberry_vals <- unique(strawberry[,i])
+}
+```
+

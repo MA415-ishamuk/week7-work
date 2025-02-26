@@ -44,10 +44,12 @@ unique(strawberry$`Ag District`)
 unique(strawberry$`Ag District Code`)
 ```
 
-Write a function to get rid of all of the NA columns etc.
+Write a function to determine what values are present in each column.
 ```{r}
+strawberry_vals <- list() # initialize strawberry_vals as a list
+
 for(i in 1:dim(strawberry)[2]) {
-  strawberry_vals <- unique(strawberry[,i])
+  strawberry_vals[[i]] <- unique(strawberry[,i])
 }
 ```
 

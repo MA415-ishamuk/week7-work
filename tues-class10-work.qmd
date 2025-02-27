@@ -43,7 +43,6 @@ unique(strawberry$`Week Ending`)
 unique(strawberry$`Ag District`)
 unique(strawberry$`Ag District Code`)
 ```
-
 Write a function to determine what values are present in each column.
 ```{r}
 strawberry_vals <- list() # initialize strawberry_vals as a list
@@ -51,5 +50,20 @@ strawberry_vals <- list() # initialize strawberry_vals as a list
 for(i in 1:dim(strawberry)[2]) {
   strawberry_vals[[i]] <- unique(strawberry[,i])
 }
+```
+
+Write a function to remove all of the columns that only have NA as a value.
+```{r}
+na_cols <- list()
+
+for(i in 1:dim(strawberry)[2]) {
+  if (is.na(strawberry_vals[[i]])[1]) {
+    na_cols[length(na_cols) + 1] <- i
+  }
+}
+
+na_cols <- unlist(na_cols)
+
+strawberry_clean <- strawberry[,-na_cols]
 ```
 

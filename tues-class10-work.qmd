@@ -43,7 +43,9 @@ unique(strawberry$`Week Ending`)
 unique(strawberry$`Ag District`)
 unique(strawberry$`Ag District Code`)
 ```
+
 Write a function to determine what values are present in each column.
+
 ```{r}
 strawberry_vals <- list() # initialize strawberry_vals as a list
 
@@ -52,18 +54,75 @@ for(i in 1:dim(strawberry)[2]) {
 }
 ```
 
-Write a function to remove all of the columns that only have NA as a value.
+Write a function to remove all of the columns that only have NA as a value. Would need to add more lines to get rid of the other that columns that have only one value.
+
 ```{r}
 na_cols <- list()
 
+# create a list of all the columns in strawberry whose values are NA
 for(i in 1:dim(strawberry)[2]) {
   if (is.na(strawberry_vals[[i]])[1]) {
     na_cols[length(na_cols) + 1] <- i
   }
 }
 
+# convert the list into a vector so that it can be used to remove the corresponding
+# columns from the strawberry data
 na_cols <- unlist(na_cols)
 
 strawberry_clean <- strawberry[,-na_cols]
 ```
 
+Another way to clean the data - create a function that drops all columns that only have one value.
+
+```{r}
+drop_one_val_col <- function(df){
+  # browser() -> by uncommenting it can be used as the debugger in quarto
+  drop <- NULL
+  for(i in 1:dim(df)[2]){
+    if ((df |> distinct(df[,i]) |> count()) == 1) {  
+      drop = c(drop, i)
+    }
+  }
+  
+  if (is.null(drop)) {
+    return("none")
+  } else {
+    print("Columns Dropped:")
+    print(colnames(df)[drop])
+    strawberry <- df[, -1*drop]
+  }
+}
+
+# overwrite strawberry by dropping the columns that only have one value
+strawberry <- strawberry |> drop_one_val_col()
+```
+
+Use a function to split the values in Data Items into their own columns.
+
+```{r}
+strawberry <- strawberry |>
+  separate_wider_delim(cols = `Data Item`,
+                       delim = ",",
+                       names = c("Fruit",
+                                 "Category",
+                                 "Item",
+                                 "Metric"),
+                       too_many = "error",
+                       too_few = "align_start")
+
+# need to add code to trim leading and trailing white spaces
+
+```
+
+Create a new set that separates the Fruit columns into either STRAWBERRIES or STRAWBERRIES - APPLICATIONS.
+
+```{r}
+unique(strawberry$Fruit)
+
+spr <- which((strawberry$Fruit == "STRAWBERRIES - APPLICATIONS"))
+
+strw_apps <- strawberry |> slice(spr) # only the rows w/ STRAWBERRIES - APPLICATIONS
+```
+
+Need to create function that will continue to separate the split Data Items columns. Some rows have AVG under Item and Metric so function needs to be written to move those rows with AVG under one column to another.
